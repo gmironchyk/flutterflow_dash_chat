@@ -39,12 +39,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final ChatUser user = ChatUser(
     name: "Fayeed",
     uid: "123456789",
-    avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
+    avatar: "https://media.istockphoto.com/id/517188688/pl/zdj%C4%99cie/g%C3%B3ra-krajobraz.jpg?s=1024x1024&w=is&k=20&c=uSz9CgB-EM3CTjrvJmV5bfvxovADGOVOz3Pa0CCufxg=",
   );
 
   final ChatUser otherUser = ChatUser(
     name: "Mrfatty",
     uid: "25649654",
+    avatar: "https://media.istockphoto.com/id/517188688/pl/zdj%C4%99cie/g%C3%B3ra-krajobraz.jpg?s=1024x1024&w=is&k=20&c=uSz9CgB-EM3CTjrvJmV5bfvxovADGOVOz3Pa0CCufxg=",
   );
 
   List<ChatMessage> messages = <ChatMessage>[];
@@ -110,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               .orderBy("createdAt")
               .snapshots(),
           builder: (context, snapshot) {
+            print(snapshot);
             if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(
@@ -134,9 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 dateFormat: DateFormat('yyyy-MMM-dd'),
                 timeFormat: DateFormat('HH:mm'),
                 messages: messages,
-                showUserAvatar: false,
+                showUserAvatar: true,
                 showAvatarForEveryMessage: false,
-                scrollToBottom: false,
+                scrollToBottom: true,
                 onPressAvatar: (ChatUser user) {
                   print("OnPressAvatar: ${user.name}");
                 },

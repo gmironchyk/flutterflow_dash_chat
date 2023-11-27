@@ -43,7 +43,11 @@ class AvatarContainer extends StatelessWidget {
         BoxConstraints(
             maxHeight: MediaQuery.of(context).size.height,
             maxWidth: MediaQuery.of(context).size.width);
-
+    final textAvatar = _TextAvatar(
+      constraints: constraints,
+      avatarMaxSize: avatarMaxSize,
+      user: user,
+    );
     return GestureDetector(
       onTap: () => onPress?.call(user),
       onLongPress: () => onLongPress?.call(user),
@@ -52,36 +56,53 @@ class AvatarContainer extends StatelessWidget {
           : Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                ClipOval(
-                  child: Container(
-                    height: constraints.maxWidth * 0.08,
-                    width: constraints.maxWidth * 0.08,
-                    constraints: BoxConstraints(
-                      maxWidth: avatarMaxSize!,
-                      maxHeight: avatarMaxSize!,
-                    ),
-                    color: Colors.grey,
-                    child: Center(
-                        child: Text(user.name == null || user.name!.isEmpty
-                            ? ''
-                            : user.name![0])),
-                  ),
+                _TextAvatar(
+                  constraints: constraints,
+                  avatarMaxSize: avatarMaxSize,
+                  user: user,
                 ),
                 user.avatar != null && user.avatar!.length != 0
-                    ? Center(
-                        child: ClipOval(
-                          child: FadeInImage.memoryNetwork(
-                            image: user.avatar!,
-                            placeholder: kTransparentImage,
-                            fit: BoxFit.cover,
-                            height: constraints.maxWidth * 0.08,
-                            width: constraints.maxWidth * 0.08,
-                          ),
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          height: constraints.maxWidth * 0.08,
+                          width: constraints.maxWidth * 0.08,
+                          imageUrl: user.avatar!,
+                          placeholder: (context, url) => textAvatar,
+                          errorWidget: (context, url, error) => textAvatar,
                         ),
                       )
-                    : Container()
+                    : textAvatar
               ],
             ),
+    );
+  }
+}
+
+class _TextAvatar extends StatelessWidget {
+  const _TextAvatar({
+    super.key,
+    required this.constraints,
+    required this.avatarMaxSize,
+    required this.user,
+  });
+
+  final BoxConstraints constraints;
+  final double? avatarMaxSize;
+  final ChatUser user;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: Container(
+        height: constraints.maxWidth * 0.08,
+        width: constraints.maxWidth * 0.08,
+        constraints: BoxConstraints(
+          maxWidth: avatarMaxSize!,
+          maxHeight: avatarMaxSize!,
+        ),
+        color: Colors.grey,
+        child: Center(child: Text(user.name == null || user.name!.isEmpty ? '' : user.name![0])),
+      ),
     );
   }
 }
